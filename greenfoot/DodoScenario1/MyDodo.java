@@ -259,6 +259,7 @@ public class MyDodo extends Dodo
     return false;}
     
     }
+    
     public void doolhofPathFinderAdvance() {
     while(!onNest()) {
     if (checkingForFenceOnTheRight() == false) {
@@ -268,6 +269,17 @@ public class MyDodo extends Dodo
     move();} else {turnLeft();}
     }
     }
+    
+    public void faceEast() {
+    if (getDirection() == NORTH) {
+    turnRight();
+    } else if (getDirection() == SOUTH) {
+    turnLeft();
+    } else if (getDirection() == WEST){
+    turn180();
+    }
+    }
 }
+
 
 
