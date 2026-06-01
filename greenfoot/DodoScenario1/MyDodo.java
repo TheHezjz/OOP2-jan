@@ -261,13 +261,11 @@ public class MyDodo extends Dodo
     }
     public void doolhofPathFinderAdvance() {
     while(!onNest()) {
-    if (getDirection() == NORTH) {
-    }
     if (checkingForFenceOnTheRight() == false) {
     turnRight();
     move();}
     if (!fenceAhead() || nestAhead()){
-    move();} else {turnRight();}
+    move();} else {turnLeft();}
     }
     }
 }
