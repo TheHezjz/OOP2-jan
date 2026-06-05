@@ -8,15 +8,13 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class MyDodo extends Dodo
 {
     private int myNrOfEggsHatched;
-    
+
     public MyDodo() {
         super( EAST );
         myNrOfEggsHatched = 0;
     }
 
-
     public void act() {
-        
     }
 
     /**
@@ -52,7 +50,7 @@ public class MyDodo extends Dodo
             return true;
         }
     }
-    
+
     /**
      * Hatches the egg in the current cell by removing
      * the egg from the cell.
@@ -69,7 +67,7 @@ public class MyDodo extends Dodo
             showError( "There was no egg in this cell" );
         }
     }
-    
+
     /**
      * Returns the number of eggs Dodo has hatched so far.
      * 
@@ -78,7 +76,7 @@ public class MyDodo extends Dodo
     public int getNrOfEggsHatched() {
         return myNrOfEggsHatched;
     }
-    
+
     /**
      * Move given number of cells forward in the current direction.
      * 
@@ -95,7 +93,7 @@ public class MyDodo extends Dodo
             nrStepsTaken++;                 // increment the counter
         }
     }
-    
+
     /**
      * Walks to edge of the world printing the coordinates at each step
      * 
@@ -129,157 +127,232 @@ public class MyDodo extends Dodo
             return true;
         }
     }  
-     /** Week 1 */
+
+    /** Week 1 */
     public void turn180() {
-     turnRight();
-     turnRight();
+        turnRight();
+        turnRight();
     }
-    
+
     public void climbOverFence() {
-       turnLeft();
-       move();
-       turnRight();
-       move();
-       move();
-       turnRight();
-       move();
-       turnLeft();
-       
+        turnLeft();
+        move();
+        turnRight();
+        move();
+        move();
+        turnRight();
+        move();
+        turnLeft();
+
     }
-    
+
     public boolean grainAhead() {
-    move();
-    if (onGrain()){
-    stepOneCellBackwards();
-    return true;
-    }else {
-    stepOneCellBackwards();
-    return false;}
+        move();
+        if (onGrain()){
+            stepOneCellBackwards();
+            return true;
+        }else {
+            stepOneCellBackwards();
+            return false;}
     }
-    
-    
+
     /** Week 2 */
     public void goToEgg() {
         while (!onEgg()) {
-        move();
+            move();
         }
     }
-    
+
     public void goBackToStartOfRowAndFaceBack() {
-     turn180();
-     walkToWorldEdge();
-     turn180();
+        turn180();
+        walkToWorldEdge();
+        turn180();
     }
-    
+
     public void walkToWorldEdgeClimbingOverFences() {
-    while(!borderAhead()) {
-        if (fenceAhead()) {
-        climbOverFence();
-        }else{move();}
-        if (onNest()) {
-        layEgg();
-        break;
-        }
-    } 
+        while(!borderAhead()) {
+            if (fenceAhead()) {
+                climbOverFence();
+            }else{move();}
+            if (onNest()) {
+                layEgg();
+                break;
+            }
+        } 
     }
-    
+
     public void pickUpGrainsAndPrintCoordinates() {
-    while(!borderAhead()) {
+        while(!borderAhead()) {
+            if(onGrain()) {
+                pickUpGrain();
+                System.out.println("X = " + getX() + ". Y = " + getY() + ", ");
+                move();
+            } else{move();}
+        }
         if(onGrain()) {
-        pickUpGrain();
-        System.out.println("X = " + getX() + ". Y = " + getY() + ", ");
-        move();
-        } else{move();}
+            pickUpGrain();
+            System.out.println("X = " + getX() + ". Y = " + getY() + ", ");}
     }
-    if(onGrain()) {
-        pickUpGrain();
-        System.out.println("X = " + getX() + ". Y = " + getY() + ", ");}
-    }
-    
+
     public void stepOneCellBackwards() {
-    turn180();
-    move();
-    turn180();
+        turn180();
+        move();
+        turn180();
     }
-    
+
     public void worldEmptyNestsTopRow() {
-    if(onNest() && canLayEgg()) {
-    layEgg();
+        if(onNest() && canLayEgg()) {
+            layEgg();
+        }
+        while(!borderAhead()) {
+            move();
+            if(onNest() && canLayEgg()) {
+                layEgg();
+            }
+        }
+
     }
-    while(!borderAhead()) {
-    move();
-    if(onNest() && canLayEgg()) {
-    layEgg();
-    }
-    }
-    
-    }
-    
+
     public void walkAroundFenceArea() {
-    while(!onEgg()) {
-    if(!fenceAhead()) {
-    turnRight();}
-    if(fenceAhead() == true){
-    turnLeft();
-    move();
-    } else {move();}
+        while(!onEgg()) {
+            if(!fenceAhead()) {
+                turnRight();}
+            if(fenceAhead() == true){
+                turnLeft();
+                move();
+            } else {move();}
+        }
     }
-    }
-    
+
     public void eggTrailToNest(){
-    while(!onNest()) {
-    if(eggAhead() == true) {
-        move();
-        pickUpEgg();
-    } else{turnRight();}
-    if(nestAhead() == true) {
-        move();
-    } 
+        while(!onNest()) {
+            if(eggAhead() == true) {
+                move();
+                pickUpEgg();
+            } else{turnRight();}
+            if(nestAhead() == true) {
+                move();
+            } 
+        }
     }
-    }
-    
+
     public void doolhofPathFinder() {
-    while(!onNest()) {
-    if(fenceAhead() || eggAhead()) {
-    turnRight();
-    } else {
-    layEgg();
-    move();}
+        while(!onNest()) {
+            if(fenceAhead() || eggAhead()) {
+                turnRight();
+            } else {
+                layEgg();
+                move();}
+        }
     }
-    }
-    
+
     public Boolean checkingForFenceOnTheRight() {
-    turnRight();
-    if (fenceAhead()){
-    turnLeft();
-    return true;
-    } 
-    else {
-    turnLeft();
-    return false;}
-    
+        turnRight();
+        if (fenceAhead()){
+            turnLeft();
+            return true;
+        } 
+        else {
+            turnLeft();
+            return false;}
+
     }
-    
+
     public void doolhofPathFinderAdvance() {
-    while(!onNest()) {
-    if (checkingForFenceOnTheRight() == false) {
-    turnRight();
-    move();}
-    if (!fenceAhead() || nestAhead()){
-    move();} else {turnLeft();}
+        while(!onNest()) {
+            if (checkingForFenceOnTheRight() == false) {
+                turnRight();
+                move();}
+            if (!fenceAhead() || nestAhead()){
+                move();} else {turnLeft();}
+        }
     }
+
+    public void faceEast() {
+        if (getDirection() == NORTH) {
+            turnRight();
+        } else if (getDirection() == SOUTH) {
+            turnLeft();
+        } else if (getDirection() == WEST){
+            turn180();
+        }
+    }
+
+    public void goToLocation(int inputX, int inputY) {
+        int x = getX();
+        int y = getY();
+        System.out.println("X = " + x);
+        System.out.println("Y = " + y);
+        System.out.println("inoutX = " + inputX);
+        System.out.println("inputY = " + inputY);
+        int Xmovement = x-inputX; 
+        int Ymovement = y-inputY;
+        System.out.println("Xmovement = " + Xmovement);
+        System.out.println("Ymovement = " + Ymovement);
+        System.out.println("X = " + Xmovement + ". Y = " + Ymovement + ", ");       
+        if (Xmovement > 0) {
+            turn180();
+            for (int i=0; i<Xmovement; i++) {
+                System.out.println(Xmovement);
+                move();
+            }
+        } else if (Xmovement < 0) {
+            for (int i=0; i>Xmovement; i--) {
+                move();
+            } 
+            faceEast();
+        } 
+        
+        if (Ymovement > 0) {
+            setDirection(NORTH);
+            for (int i=0; i<Ymovement; i++) {
+                System.out.println(Ymovement);
+                move();
+            } 
+            faceEast();
+        }else if (Ymovement < 0) {
+            System.out.println(Ymovement);
+            setDirection(SOUTH);
+            for (int i=0; i>Ymovement; i--) {
+                move();
+            } 
+            faceEast();
+        }
     }
     
-    public void faceEast() {
-    if (getDirection() == NORTH) {
-    turnRight();
-    } else if (getDirection() == SOUTH) {
-    turnLeft();
-    } else if (getDirection() == WEST){
-    turn180();
+    public Boolean validcoordinates(int x, int y){
+    Boolean truth = true;
+    int worldX = getWorld().getWidth();
+    int worldY = getWorld().getHeight();
+    worldX--;
+    worldY--;
+    System.out.println(worldX + " " +  worldY);
+    if (x > worldX) {
+    truth = false;
+    System.out.println("invalid x coordinates");
+    } else if (x < 0) {
+    truth = false;
+    System.out.println("invalid x coordinates");
+    } 
+    if (y > worldY) {
+    truth = false;
+    System.out.println("invalid y coordinates");
+    } else if (y < 0) {
+    truth = false;
+    System.out.println("invalid y coordinates");
+    } 
+    return truth;
     }
+    
+    public int countEggsInRow() {
+    int amountEggs = 0;
+    while(!borderAhead()){
+    if (onEgg()) {
+    amountEggs++;
+    }}
+    goBackToStartOfRowAndFaceBack();
+    return amountEggs;
     }
 }
-
 
 
