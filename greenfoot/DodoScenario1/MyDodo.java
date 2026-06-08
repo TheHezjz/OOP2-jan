@@ -302,7 +302,7 @@ public class MyDodo extends Dodo
             } 
             faceEast();
         } 
-        
+
         if (Ymovement > 0) {
             setDirection(NORTH);
             for (int i=0; i<Ymovement; i++) {
@@ -319,40 +319,102 @@ public class MyDodo extends Dodo
             faceEast();
         }
     }
-    
+
     public Boolean validcoordinates(int x, int y){
-    Boolean truth = true;
+        Boolean truth = true;
+        int worldX = getWorld().getWidth();
+        int worldY = getWorld().getHeight();
+        worldX--;
+        worldY--;
+        System.out.println(worldX + " " +  worldY);
+        if (x > worldX) {
+            truth = false;
+            System.out.println("invalid x coordinates");
+        } else if (x < 0) {
+            truth = false;
+            System.out.println("invalid x coordinates");
+        } 
+        if (y > worldY) {
+            truth = false;
+            System.out.println("invalid y coordinates");
+        } else if (y < 0) {
+            truth = false;
+            System.out.println("invalid y coordinates");
+        } 
+        return truth;
+    }
+    
+    public Boolean checkingForEggsOnTheRight() {
+        turnRight();
+        if (eggAhead()){
+            turnLeft();
+            return true;
+        } 
+        else {
+            turnLeft();
+            return false;}
+    }
+    
+    public int countEggsInRow() {
+        int amountEggs = 0;
+        while(!onNest()){
+        if (eggAhead() || nestAhead()){
+        move();
+        } 
+        if (checkingForEggsOnTheRight() == true) {
+        turnRight();
+        move();} 
+        else {
+        turnLeft();
+        } 
+        if (onEgg()) {
+        amountEggs++;
+        }
+        }
+    return amountEggs;
+    }
+    
+    public void layTrailOfEggs(int howManySteps) {
+    layEgg();
+    while (howManySteps != 0) {
+    move();
+    layEgg();
+    howManySteps--;
+    }
+    }
+    
+    public int countEggsInTheWorld() {
+    int amountEggs = 0;
+    int currentX = 0;
+    int currentY = 0;
+    Boolean endOfWorld = false;
     int worldX = getWorld().getWidth();
     int worldY = getWorld().getHeight();
     worldX--;
     worldY--;
-    System.out.println(worldX + " " +  worldY);
-    if (x > worldX) {
-    truth = false;
-    System.out.println("invalid x coordinates");
-    } else if (x < 0) {
-    truth = false;
-    System.out.println("invalid x coordinates");
-    } 
-    if (y > worldY) {
-    truth = false;
-    System.out.println("invalid y coordinates");
-    } else if (y < 0) {
-    truth = false;
-    System.out.println("invalid y coordinates");
-    } 
-    return truth;
+    while(worldX >= currentX && worldY >= currentY) {
+    currentX = getX();
+    currentY = getY();
+    System.out.println("currentX = " + currentX + " and currentY = " + currentY);
+    System.out.println("WorldX = " + worldX + " and worldY = " + worldY);
+    if (currentY > worldY) {
+    setDirection(NORTH);
+    int travelY = worldY - worldY;     
+    goToLocation(worldX,currentY);
+    } else {
+    setDirection(SOUTH);  
+    currentY++;
+    currentX = 0;
+    goToLocation(worldX,currentY);}
+    faceEast();
+    move();
+    if (worldX <= currentX && worldY <= currentY) {
+    endOfWorld = true;
+    }
     }
     
-    public int countEggsInRow() {
-    int amountEggs = 0;
-    while(!borderAhead()){
-    if (onEgg()) {
-    amountEggs++;
-    }}
-    goBackToStartOfRowAndFaceBack();
+    
     return amountEggs;
     }
 }
-
 
