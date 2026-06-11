@@ -343,7 +343,7 @@ public class MyDodo extends Dodo
         } 
         return truth;
     }
-    
+
     public Boolean checkingForEggsOnTheRight() {
         turnRight();
         if (eggAhead()){
@@ -354,67 +354,69 @@ public class MyDodo extends Dodo
             turnLeft();
             return false;}
     }
-    
+
     public int countEggsInRow() {
         int amountEggs = 0;
         while(!onNest()){
-        if (eggAhead() || nestAhead()){
-        move();
-        } 
-        if (checkingForEggsOnTheRight() == true) {
-        turnRight();
-        move();} 
-        else {
-        turnLeft();
-        } 
-        if (onEgg()) {
-        amountEggs++;
+            if (eggAhead() || nestAhead()){
+                move();
+            } 
+            if (checkingForEggsOnTheRight() == true) {
+                turnRight();
+                move();} 
+            else {
+                turnLeft();
+            } 
+            if (onEgg()) {
+                amountEggs++;
+            }
         }
-        }
-    return amountEggs;
+        return amountEggs;
     }
-    
+
     public void layTrailOfEggs(int howManySteps) {
-    layEgg();
-    while (howManySteps != 0) {
-    move();
-    layEgg();
-    howManySteps--;
+        layEgg();
+        while (howManySteps != 0) {
+            move();
+            layEgg();
+            howManySteps--;
+        }
     }
-    }
-    
+
     public int countEggsInTheWorld() {
-    int amountEggs = 0;
-    int currentX = 0;
-    int currentY = 0;
-    Boolean endOfWorld = false;
-    int worldX = getWorld().getWidth();
-    int worldY = getWorld().getHeight();
-    worldX--;
-    worldY--;
-    while(worldX >= currentX && worldY >= currentY) {
-    currentX = getX();
-    currentY = getY();
-    System.out.println("currentX = " + currentX + " and currentY = " + currentY);
-    System.out.println("WorldX = " + worldX + " and worldY = " + worldY);
-    if (currentY > worldY) {
-    setDirection(NORTH);
-    int travelY = worldY - worldY;     
-    goToLocation(worldX,currentY);
-    } else {
-    setDirection(SOUTH);  
-    currentY++;
-    currentX = 0;
-    goToLocation(worldX,currentY);}
-    faceEast();
-    move();
-    if (worldX <= currentX && worldY <= currentY) {
-    endOfWorld = true;
-    }
-    }
-    
-    
-    return amountEggs;
+        int amountEggs = 0;
+        boolean endloop = false;
+        int currentX = 0;
+        int currentY = 0;
+        int worldX = getWorld().getWidth();
+        int worldY = getWorld().getHeight();
+        worldX--;
+        worldY--;
+        while(endloop = false) {
+            currentX = getX();
+            currentY = getY();
+            System.out.println("currentX = " + currentX + " and currentY = " + currentY);
+            System.out.println("WorldX = " + worldX + " and worldY = " + worldY);
+            if (currentY < worldY) {
+                setDirection(EAST);
+                int travelY = worldY - worldY;     
+                goToLocation(worldX,currentY);
+            } 
+            if (borderAhead()) {
+            int travelX = worldX - worldX;
+            goToLocation(travelX,currentY);
+            setDirection(SOUTH);
+            move();
+            faceEast();
+            }
+            if (worldX == currentX && worldY == currentY) {
+            endloop = true;
+            }
+            if (onEgg()){
+            amountEggs++;}
+        }
+
+        return amountEggs;
     }
 }
 
