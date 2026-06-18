@@ -368,102 +368,162 @@ public class MyDodo extends Dodo
     }
 
     public int countEggsInTheWorld() {
-        int amountEggs = 0;
-        boolean endloop = true;
-        int currentX = 0;
-        int currentY = 0;
-        int startingX = getX();
-        int startingY = getY();
-        int worldX = getWorld().getWidth();
-        int worldY = getWorld().getHeight();
-        worldY--;
-        worldX--;
-        while(endloop == true) {
-            currentX = getX();
-            currentY = getY();
-            if (currentY <= worldY) {
-                setDirection(EAST);
-                while (!borderAhead()) {
-                    move();
-                    if (onEgg()){
-                        amountEggs++;}
-                }
-            }
-            currentX = getX();
-            currentY = getY();
-            if (worldX == currentX && worldY == currentY) {
-                endloop = false;
+        int eggCountTotal = 0;
+        int posX = getX();
+        int posY = getY();
+        int posSum = posX + posY;
+        int worldX = getWorld().getWidth() -1;
+        int worldY = getWorld().getHeight() -1;
+        goToLocation(0,0);
 
+        while (eggCountTotal == 0 || posSum != 0) 
+        {
+            if (posX == 0 && posY == worldY ) {
+                goToLocation(0,0);
+                System.out.print(eggCountTotal);
             }
-            if (borderAhead()) {
-                int travelX = worldX - worldX;
-                goToLocation(travelX,currentY);
+
+            if (borderAhead() == true && getDirection() == EAST) 
+            {
+                if (onEgg() == true) 
+                {
+                    eggCountTotal = eggCountTotal + 1;
+                }
                 setDirection(SOUTH);
                 move();
-                faceEast();
+                setDirection(WEST);
             }
-            if (onEgg()){
-                amountEggs++;}
+
+            else if (borderAhead() == true && getDirection() == WEST) 
+            {
+                if (onEgg() == true) 
+                {
+                    eggCountTotal = eggCountTotal + 1;
+                }
+                setDirection(SOUTH);
+                move();
+                setDirection(EAST);
+            }
+
+            if (borderAhead() == false) 
+            {
+                if (onEgg() == true) 
+                {
+                    eggCountTotal = eggCountTotal + 1;
+                }
+                posX = getX();
+                posY = getY();
+                posSum = posX + posY;
+                move();
+            }
         }
-        goToLocation(startingX,startingY);
-        faceEast();
-        return amountEggs;
+        return eggCountTotal;
     }
-    
-    public String rowWithTheMostEggs() {
-        int amountEggs = 0;
-        boolean endloop = true;
-        int currentX = 0;
-        int currentY = 0;
-        int startingX = getX();
-        int startingY = getY();
-        int worldX = getWorld().getWidth();
-        int worldY = getWorld().getHeight();
-        int mostEggsInARow = 0;
-        int eggPerRow = 0;
-        int mostEggsInTheRowX = 0;
-        int mostEggsInTheRowY= 0; 
-        worldY--;
-        worldX--;
 
-        while(endloop == true) {
-            currentX = getX();
-            currentY = getY();
-            if (currentY <= worldY) {
-                setDirection(EAST);
-                while (!borderAhead()) {
-                    move();
-                    if (onEgg()){
-                        amountEggs++;
-                        eggPerRow++;            }
+    public String mostEggsInARow() {
+        int eggCountTotal = 0;
+        int mostEggsInRow = 0;
+        int posX = getX();
+        int posY = getY();
+        int posSum = posX + posY;
+        int mostEggsY = 0;
+        int worldX = getWorld().getWidth() -1;
+        int worldY = getWorld().getHeight() -1;
+        goToLocation(0,0);
+        boolean loopEnd = false;
+
+        while (loopEnd == false || posSum != 0) 
+        {
+            if (posX == 0 && posY == worldY ) {
+                goToLocation(0,0);
+                System.out.print(eggCountTotal);
+            }
+
+            if (borderAhead() == true && getDirection() == EAST) 
+            {
+                if (onEgg() == true) 
+                {
+                    eggCountTotal = eggCountTotal + 1;
                 }
-            }
-            if (eggPerRow >= mostEggsInARow) {
-            mostEggsInARow = eggPerRow;
-            mostEggsInTheRowY = getY();
-            mostEggsInTheRowX = getX();
-            }
-            amountEggs = 0;
-            currentX = getX();
-            currentY = getY();
-            if (worldX == currentX && worldY == currentY) {
-                endloop = false;
-
-            }
-            if (borderAhead()) {
-                int travelX = worldX - worldX;
-                goToLocation(travelX,currentY);
                 setDirection(SOUTH);
                 move();
-                faceEast();
+                setDirection(WEST);
             }
-            if (onEgg()){
-                amountEggs++;}
+
+            else if (borderAhead() == true && getDirection() == WEST) 
+            {
+                if (onEgg() == true) 
+                {
+                    eggCountTotal = eggCountTotal + 1;
+                }
+                setDirection(SOUTH);
+                move();
+                setDirection(EAST);
+            }
+
+            if (borderAhead() == false) 
+            {
+                if (onEgg() == true) 
+                {
+                    eggCountTotal = eggCountTotal + 1;
+                }
+                if (eggCountTotal >= mostEggsInRow) {
+                    mostEggsInRow = eggCountTotal;
+                    mostEggsY = getY();
+                }
+                eggCountTotal = 0;
+                posX = getX();
+                posY = getY();
+                posSum = posX + posY;
+                move();
+            }
+            if (getX() == worldX && getY() == worldY) {
+                loopEnd = true;
+            }
         }
-        goToLocation(startingX,startingY);
-        String mostEggsInTheRow = "The most eggs in the row is row X=" + mostEggsInTheRowX + "and Y=" + mostEggsInTheRowY;
-        faceEast();
-        return mostEggsInTheRow; 
+        String answer = "the row witht he most eggs is row Y" + mostEggsY + "With " + mostEggsInRow + " eggs in their row";
+        return answer;
+    }
+
+    public Boolean checkingForWorldBorderRight() {
+        turnRight();
+        if (borderAhead()){
+            turnLeft();
+            return true;
+        } 
+        else {
+            turnLeft();
+            return false;}
+    }
+
+    public void monumentOfEggs() {
+        boolean endOfLoop = false;
+        int worldX = getWorld().getWidth() -1;
+        int worldY = getWorld().getHeight() -1;
+        int originXPosition = getX();
+        int originYPosition = getY();
+        int yMovement = 0;
+        int xMovement = -1;
+        while (endOfLoop == false){
+            for (int i = 0; i <= xMovement; i++) {
+                if (!onEgg()) {
+                    layEgg();}
+                move();
+                System.out.println("for loop works and i =" + i);
+            }
+            if (!onEgg()) {
+                    layEgg();}
+            xMovement++;
+            System.out.println("xMovement =" + xMovement);
+            originYPosition++;
+            if(checkingForWorldBorderRight() == true || borderAhead() == true) {
+                endOfLoop = true;
+                break;
+            } 
+            goToLocation(originXPosition,originYPosition);
+        }
+
     }
 }
+
 
