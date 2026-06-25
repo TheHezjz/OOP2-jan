@@ -341,25 +341,6 @@ public class MyDodo extends Dodo
             return false;}
     }
 
-    public int countEggsInRow() {
-        int amountEggs = 0;
-        while(!onNest()){
-            if (eggAhead() || nestAhead()){
-                move();
-            } 
-            if (checkingForEggsOnTheRight() == true) {
-                turnRight();
-                move();} 
-            else {
-                turnLeft();
-            } 
-            if (onEgg()) {
-                amountEggs++;
-            }
-        }
-        return amountEggs;
-    }
-
     public void layTrailOfEggs(int howManySteps) {
         layEgg();
         while (howManySteps != 0) {
@@ -542,10 +523,10 @@ public class MyDodo extends Dodo
         while (endOfLoop == false) {
             System.out.println("the eggs needed to be dropped are " + amountOfEggsnNeedTobeLayed);
             for (int layedEgg = 0; layedEgg < amountOfEggsnNeedTobeLayed;) {
-            if (!onEgg()) {
-            layEgg();}
-            layedEgg++;
-            move();
+                if (!onEgg()) {
+                    layEgg();}
+                layedEgg++;
+                move();
             }
             originYPosition++;
             goToLocation(originXPosition,originYPosition);
@@ -554,47 +535,47 @@ public class MyDodo extends Dodo
                 break;}
         }
     }
-    
+
     public void pyramidOffEggs() {
-    int worldX = getWorld().getWidth() -1;
-    int originXPosition = getX();
-    int originYPosition = getY();
-    int maxXMovement = 0;
-    int minXMovement = 0;
-    int xMovementBackwards = 0;
-    int amountOfEggsnNeedTobeLayed = 1;
-    int breakCalculation = 0;
-    boolean endOfLoop = false;
-    maxXMovement =  worldX - originXPosition; 
-    minXMovement =  worldX - originXPosition;
-    while (endOfLoop == false){
-    for (int i = 0; i < xMovementBackwards; i++) {
-    setDirection(WEST);
-    move();
+        int worldX = getWorld().getWidth() -1;
+        int originXPosition = getX();
+        int originYPosition = getY();
+        int maxXMovement = 0;
+        int minXMovement = 0;
+        int xMovementBackwards = 0;
+        int amountOfEggsnNeedTobeLayed = 1;
+        int breakCalculation = 0;
+        boolean endOfLoop = false;
+        maxXMovement =  worldX - originXPosition; 
+        minXMovement =  worldX - originXPosition;
+        while (endOfLoop == false){
+            for (int i = 0; i < xMovementBackwards; i++) {
+                setDirection(WEST);
+                move();
+            }
+            faceEast();
+            for (int layedEgg = 0; layedEgg < amountOfEggsnNeedTobeLayed;) {
+                if (!onEgg()) {
+                    layEgg();}
+                layedEgg++;
+                move();
+            }
+            originYPosition++;
+            xMovementBackwards++;
+            amountOfEggsnNeedTobeLayed = amountOfEggsnNeedTobeLayed + 2;
+            goToLocation(originXPosition,originYPosition);
+            breakCalculation = amountOfEggsnNeedTobeLayed;
+            breakCalculation--;
+            breakCalculation = breakCalculation/2; 
+            breakCalculation++;
+            System.out.print(breakCalculation);
+            if (breakCalculation > maxXMovement || breakCalculation > minXMovement) {
+                System.out.print("Break actovated");
+                break;
+            }
+        }
     }
-    faceEast();
-    for (int layedEgg = 0; layedEgg < amountOfEggsnNeedTobeLayed;) {
-    if (!onEgg()) {
-    layEgg();}
-    layedEgg++;
-    move();
-    }
-    originYPosition++;
-    xMovementBackwards++;
-    amountOfEggsnNeedTobeLayed = amountOfEggsnNeedTobeLayed + 2;
-    goToLocation(originXPosition,originYPosition);
-    breakCalculation = amountOfEggsnNeedTobeLayed;
-    breakCalculation--;
-    breakCalculation = breakCalculation/2; 
-    breakCalculation++;
-    System.out.print(breakCalculation);
-    if (breakCalculation > maxXMovement || breakCalculation > minXMovement) {
-    System.out.print("Break actovated");
-    break;
-    }
-    }
-    }
-    
+
     public void rowEggAverage () {
         boolean countEnd = false;
         double eggCountRow = 0;
@@ -632,7 +613,7 @@ public class MyDodo extends Dodo
                 move();
                 setDirection(EAST);
             }
-            
+
             if (borderAhead() == false) 
             {
                 if (onEgg() == true) 
@@ -645,6 +626,91 @@ public class MyDodo extends Dodo
                 move();
             }
         }
+    }
+
+    public int countEggsInRow() {
+        int amountEggs = 0;
+        if (onEgg()) {
+            amountEggs++;
+        }
+        while(!borderAhead()){
+            move();
+            if (onEgg()) {
+                amountEggs++;
+            }
+        }
+        return amountEggs;
+    }
+
+    public int countEggsInColumn() {
+        int amountEggs = 0;
+        setDirection(SOUTH);
+        if (onEgg()) {
+            amountEggs++;
+        }
+        while(!borderAhead()){
+            move();
+            if (onEgg()) {
+                amountEggs++;
+            }
+        }
+        return amountEggs;
+    }
+
+    public void makeRowsEven() {
+        int rowNumber = 0;
+        int worldX = getWorld().getWidth() -1;
+        int worldY = getWorld().getHeight() -1;
+        for (int i = 0; i <= worldX; i++) {
+            rowNumber = countEggsInRow(); 
+            if(rowNumber %2 != 0) {
+                layEgg();}
+            rowNumber = 0;
+            goBackToStartOfRowAndFaceBack();
+            setDirection(SOUTH);
+            move();
+            faceEast();
+        }
+        goToLocation(0,0);
+        for (int i = 0; i <= worldX; i++) {
+            rowNumber = countEggsInRow(); 
+            if(rowNumber %2 != 0) {
+                layEgg();}
+            rowNumber = 0;
+            goBackToStartOfRowAndFaceBack();
+            setDirection(SOUTH);
+            move();
+            faceEast();
+        }
+        goBackToStartOfRowAndFaceBack();
+    }
+
+    public int getIncorrectRowNr() {
+        int xPosDigit = 0;
+        return xPosDigit;
+    }
+
+    public int getToIncorrectCollumNr() {
+        int yPosDigit = 0;
+        return yPosDigit;
+    }
+
+    public void pariteitsbitAlgoritme() {
+        int worldX = getWorld().getWidth() -1;
+        int worldY = getWorld().getHeight() -1;
+        int originXPosition = getX();
+        int originYPosition = getY();    
+        goToLocation(0,0);
+
+    }
+    
+    
+    
+    public void mimiRace() {
+    for (int i = 0; i <= 40; i++) {
+    move();
+    
+    } 
     }
 }
 

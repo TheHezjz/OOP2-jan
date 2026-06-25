@@ -14,7 +14,8 @@ public class BlueEgg extends Egg
     private boolean hasABlueEgg() {
         return getOneObjectAtOffset(0, 0, BlueEgg.class) != null;
     }
-
+    
+    
     public void setLocation( int x, int y ){
         Nest mayBeNest = (Nest) getOneObjectAtOffset(0, 0, Nest.class);
         if ( mayBeNest != null ) {
