@@ -95,7 +95,6 @@ public class MyDodo extends Dodo
         return new ArrayList<> (Arrays.asList( 2, 43, 7, -5, 12, 7 ));
     }
     
-
     /**
      * Method for praciticing with lists.
      */
@@ -107,4 +106,117 @@ public class MyDodo extends Dodo
     public void practiceWithListsOfSurpriseEgss( ){
         List<SurpriseEgg>  listOfEgss = SurpriseEgg.generateListOfSurpriseEggs( 12, getWorld() );
     }
+    
+    public void faceEast() {
+    setDirection(EAST);
+    }
+    
+    public void turn180(){
+    turnRight();
+    turnRight();
+    }
+    
+    public void goToLocation(int inputX, int inputY) {
+        int x = getX();
+        int y = getY();
+        int Xmovement = x-inputX; 
+        int Ymovement = y-inputY;      
+        if (Xmovement > 0) {
+            turn180();
+            for (int i=0; i<Xmovement; i++) {
+                move();
+            }
+        } else if (Xmovement < 0) {
+            for (int i=0; i>Xmovement; i--) {
+                move();
+            } 
+            faceEast();
+        } 
+
+        if (Ymovement > 0) {
+            setDirection(NORTH);
+            for (int i=0; i<Ymovement; i++) {
+                move();
+            } 
+            faceEast();
+        }else if (Ymovement < 0) {
+            setDirection(SOUTH);
+            for (int i=0; i>Ymovement; i--) {
+                move();
+            } 
+            faceEast();
+        }
+    }
+
+    public Boolean validcoordinates(int x, int y){
+        Boolean truth = true;
+        int worldX = getWorld().getWidth();
+        int worldY = getWorld().getHeight();
+        worldX--;
+        worldY--;
+        System.out.println(worldX + " " +  worldY);
+        if (x > worldX) {
+            truth = false;
+            System.out.println("invalid x coordinates");
+        } else if (x < 0) {
+            truth = false;
+            System.out.println("invalid x coordinates");
+        } 
+        if (y > worldY) {
+            truth = false;
+            System.out.println("invalid y coordinates");
+        } else if (y < 0) {
+            truth = false;
+            System.out.println("invalid y coordinates");
+        } 
+        return truth;
+    }
+    
+    public int getAsManyEggsAsYouCanMimi() {
+    List<GoldenEgg> goldenEggs = getListOfGoldenEggsInWorld();
+    List<BlueEgg> blueEggs = getListOfBlueEggsInWorld();
+    int movesLeft = 40;    
+    int totalPoints = 0;
+    if (!goldenEggs.isEmpty()) {
+        GoldenEgg golden = goldenEggs.get(0);
+        int cost = Math.abs(getX() - golden.getX()) + Math.abs(getY() - golden.getY());
+        if (cost <= movesLeft) {
+            goToLocation(golden.getX(), golden.getY());
+            movesLeft -= cost;
+            pickUpEgg();
+            totalPoints = totalPoints + 5;
+        }
+    }
+
+    List<int[]> blueEggInformation = new ArrayList<>();
+    for (BlueEgg eachEgg : blueEggs) {
+        blueEggInformation.add(new int[]{eachEgg.getX(), eachEgg.getY()});
+    }
+     
+    while (!blueEggInformation.isEmpty() && movesLeft > 0) {
+        for (int i = 0; i < blueEggInformation.size(); i++) {
+            for (int i2 = i + 1; i2 < blueEggInformation.size(); i2++) {
+                int distance1 = Math.abs(getX() - blueEggInformation.get(i)[0]) + Math.abs(getY() - blueEggInformation.get(i)[1]);
+                int distance2 = Math.abs(getX() - blueEggInformation.get(i2)[0]) + Math.abs(getY() - blueEggInformation.get(i2)[1]);
+                if (distance1 > distance2) {
+                    int[] tempPlaceHolder = blueEggInformation.get(i);
+                    blueEggInformation.set(i, blueEggInformation.get(i2));
+                    blueEggInformation.set(i2, tempPlaceHolder);
+                }
+            }
+        }
+
+        int[] nearest = blueEggInformation.get(0);
+        int cost = Math.abs(getX() - nearest[0]) + Math.abs(getY() - nearest[1]);
+        if (cost <= movesLeft) {
+            goToLocation(nearest[0], nearest[1]);
+            movesLeft -= cost;
+            pickUpEgg();
+            totalPoints++;
+        }
+        blueEggInformation.remove(0);
+    }
+    return totalPoints;
+    }
 }
+
