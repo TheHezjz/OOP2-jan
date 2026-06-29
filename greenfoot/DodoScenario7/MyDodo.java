@@ -182,7 +182,7 @@ public class MyDodo extends Dodo
         int cost = Math.abs(getX() - golden.getX()) + Math.abs(getY() - golden.getY());
         if (cost <= movesLeft) {
             goToLocation(golden.getX(), golden.getY());
-            movesLeft -= cost;
+            movesLeft = movesLeft - cost;
             pickUpEgg();
             totalPoints = totalPoints + 5;
         }
@@ -206,11 +206,11 @@ public class MyDodo extends Dodo
             }
         }
 
-        int[] nearest = blueEggInformation.get(0);
-        int cost = Math.abs(getX() - nearest[0]) + Math.abs(getY() - nearest[1]);
+        int[] nearestEgg = blueEggInformation.get(0);
+        int cost = Math.abs(getX() - nearestEgg[0]) + Math.abs(getY() - nearestEgg[1]);
         if (cost <= movesLeft) {
-            goToLocation(nearest[0], nearest[1]);
-            movesLeft -= cost;
+            goToLocation(nearestEgg[0], nearestEgg[1]);
+            movesLeft = movesLeft - cost;
             pickUpEgg();
             totalPoints++;
         }
